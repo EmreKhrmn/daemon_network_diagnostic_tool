@@ -26,7 +26,7 @@
                 },
                 {
                     "condition": "name === 'test.py'",
-                    "priority": 100
+                    "priority": 200
                 },
                 {
                     "condition": "name === '.venv'",
@@ -34,7 +34,23 @@
                 },
                 {
                     "condition": "name === 'todo.txt'",
-                    "priority": 200
+                    "priority": 300
+                },
+                {
+                    "condition": "name === 'echo_test.py'",
+                    "priority": -200
+                }
+            ]
+        },
+        {
+            "name": "Auto-generated for **/*",
+            "pathPattern": "**/*",
+            "priorities": [
+                {
+                    "condition": "name === 'echo_test.py'",
+                    "priority": -100,
+                    "referenceFile": "machine_info.py",
+                    "offset": -1
                 }
             ]
         }

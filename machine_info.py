@@ -16,7 +16,7 @@ def print_machine_info():
     #all IPs
     all_ips = socket.gethostbyname_ex(host_name)[2]
 
-    #network interfaces and their IPs and their names
+    #network interfaces and their IPs/MAC's and their names
     def get_network_interfaces():
 
         network_interfaces = psutil.net_if_addrs()

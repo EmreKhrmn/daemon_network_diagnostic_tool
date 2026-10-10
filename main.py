@@ -1,4 +1,5 @@
 import machine_info
+import echo_test
 
 def main():
     #temporary menu skeleton
