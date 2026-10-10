@@ -19,6 +19,14 @@
                 {
                     "condition": "name === '.vscode'",
                     "priority": 100
+                },
+                {
+                    "condition": "name === '__pycache__'",
+                    "priority": 100
+                },
+                {
+                    "condition": "name === 'test.py'",
+                    "priority": 100
                 }
             ]
         }
