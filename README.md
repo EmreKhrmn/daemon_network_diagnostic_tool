@@ -1,2 +1,2 @@
 # network_diagnostic_tool
-A comprehensive network diagnostic tool
+Daemon is a comprehensive network diagnostic tool
