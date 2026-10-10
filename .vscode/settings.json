@@ -1,0 +1,14 @@
+{
+    "explorerSort.rules": [
+        {
+            "name": "Auto-generated for **",
+            "pathPattern": "**",
+            "priorities": [
+                {
+                    "condition": "name === '1-machine_info.py'",
+                    "priority": -100
+                }
+            ]
+        }
+    ]
+}
