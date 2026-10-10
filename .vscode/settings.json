@@ -27,6 +27,14 @@
                 {
                     "condition": "name === 'test.py'",
                     "priority": 100
+                },
+                {
+                    "condition": "name === '.venv'",
+                    "priority": 100
+                },
+                {
+                    "condition": "name === 'todo.txt'",
+                    "priority": 200
                 }
             ]
         }
