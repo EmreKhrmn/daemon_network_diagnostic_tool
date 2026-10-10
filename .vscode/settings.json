@@ -7,6 +7,14 @@
                 {
                     "condition": "name === '1-machine_info.py'",
                     "priority": -100
+                },
+                {
+                    "condition": "name === 'machine_info.py'",
+                    "priority": -100
+                },
+                {
+                    "condition": "name === 'README.md'",
+                    "priority": 100
                 }
             ]
         }

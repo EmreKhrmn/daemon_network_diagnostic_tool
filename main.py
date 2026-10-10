@@ -1,3 +1,5 @@
+import machine_info
+
 def main():
     #temporary menu skeleton
     while True:
@@ -13,7 +15,7 @@ def main():
         choice = input("Choose an option (0-6): ")
 
         if choice == '1':
-            pass
+            machine_info.print_machine_info()
         elif choice == '2':
             pass
         elif choice == '3':
