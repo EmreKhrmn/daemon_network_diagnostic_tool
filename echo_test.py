@@ -53,7 +53,18 @@ def run_server():
 
 #tcp client
 def run_client():
-    pass
+    host_name = input("Enter server IP or hostname to connect to: ")
+    
+    port = int(input("Enter the server's port: "))
+
+    #tcp
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    print(f"Connecting to {host_name}:{port}...")
+
+    #connect(?)
+    sock.connect((host_name,port))
+
 
 
 
