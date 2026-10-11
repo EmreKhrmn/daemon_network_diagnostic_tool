@@ -66,9 +66,37 @@ def run_client():
     sock.connect((host_name,port))
 
 
+    try:
+        message = input("Please enter your message")
+        print(f'Sending "{message}"')
 
+        sock.sendall(message.encode('utf-8'))
 
+        #response
+        amount_received = 0
+        amount_expected = len(message)
+        full_response = ""
 
+        while amount_received < amount_expected:
+            data = sock.recv(16)
+            amount_received += len(data)
+            full_response += data.decode('utf-8')
+            print(f"Received {data}")
+
+        if message == full_response:
+            print(f'Successfully received message: "{full_response}"')
+        else:    
+            print(f'Error: Data mismatch: Received: "{full_response}"')
+    except socket.error as socket_error:
+        print(f'Socket error: "{str(socket_error)}"')
+
+    except Exception as exc:
+        print(f'Other exception: "{str(exc)}"')
+
+    finally:
+        print("Closing connection to the server")
+        
+        sock.close()
 
 
 
