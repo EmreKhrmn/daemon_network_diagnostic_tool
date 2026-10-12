@@ -21,6 +21,8 @@ def run_server():
 
     #------------------------
     #send data
+    sock.listen(backlog)
+    
 
 
 
@@ -95,7 +97,7 @@ def run_client():
 
     finally:
         print("Closing connection to the server")
-        
+
         sock.close()
 
 
