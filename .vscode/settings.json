@@ -39,6 +39,14 @@
                 {
                     "condition": "name === 'echo_test.py'",
                     "priority": -200
+                },
+                {
+                    "condition": "name === 'simple_chat.py'",
+                    "priority": -300
+                },
+                {
+                    "condition": "name === 'sntp_time.py'",
+                    "priority": -200
                 }
             ]
         },
