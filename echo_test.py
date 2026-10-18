@@ -21,7 +21,23 @@ def run_server():
 
     #------------------------
     #send data
-    sock.listen(backlog)
+    sock.listen(1)
+    print("Waiting for a client to connect...")
+
+    conn, addr = sock.accept()
+    print(f"Connected by: {addr}")
+
+    with conn:
+        while True:
+            data = conn.recv(2048)
+
+            if not data:
+                break
+
+            print(f"Received from client. {data.decode('utf-8')}")
+
+            conn.sendall(data)
+
     
 
 
