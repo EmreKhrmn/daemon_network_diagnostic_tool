@@ -53,6 +53,16 @@
                     "offset": -1
                 }
             ]
+        },
+        {
+            "name": "Auto-generated for **/.vscode/**",
+            "pathPattern": "**/.vscode/**",
+            "priorities": [
+                {
+                    "condition": "name === 'A'",
+                    "priority": -100
+                }
+            ]
         }
     ]
 }
