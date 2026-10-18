@@ -87,10 +87,29 @@ def chat_menu():
 
     if choice == '1':
         conn, server_sock = start_server()
-        #TODO: thread
+        print("Chat Started. Type your message below. Type 'exit' to quit.")
+
+        #receiver
+        recv_thread = threading.Thread(target=receive_messages, args=(conn,))
+        recv_thread.daemon = True
+        recv_thread.start()
+
+        #sender
+        send_messages(conn)
+
+        #clean
+        conn.close()
+        server_sock.close()
+
     elif choice == '2':
         client_sock = start_client()
-        #TODO
+        print("Chat started. Type your message below. Type 'exit' to quit." )
+
+        recv_thread = threading.Thread(target=receive_messages, args=(client_sock,))
+        recv_thread.daemon = True
+        recv_thread.start()
+
+        send_messages(client_sock)
     else:
         print("Invalid choice.")
 
