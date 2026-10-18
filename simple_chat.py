@@ -1,4 +1,5 @@
 import socket
+import threading
 
 def start_server():
     host = socket.gethostname()
@@ -27,6 +28,53 @@ def start_client():
     sock.connect((host, port))
 
     return sock
+
+
+def receive_messages(sock, log_filename="chat_log.txt"):
+
+    with open(log_filename, "a", encoding="utf-8") as log_file:
+        while True:
+            try:
+                data = sock.recv(2048)
+                if not data:
+                    print("[Partner Disconnected]")
+                    break
+
+                message = data.decode('utf-8')
+                formatted_msg = (f"Partner: {message}")
+
+                print(f"\n{formatted_msg}")
+                log_file.write(formatted_msg + "\n")
+                log_file.flush()
+
+            except Exception as e:
+                print(f"\n[Connection closed or error: {e}]")
+                break
+
+def send_messages(sock, log_filename="chat_log.txt"):
+
+    with open(log_filename, "a", encoding="utf-8") as log_file:
+        while True:
+            try:
+                message = input("")
+                if message.lower() == 'exit':
+                    print("Closing connection...")
+                    sock.close()
+                    break
+
+                #bytes over network
+                sock.sendall(message.encode('utf-8'))
+
+                #own msg log save
+                formatted_msg = (f"Me: {message}")
+                log_file.write(formatted_msg + "\n")
+                log_file.flush()
+
+            except Exception as e:
+                break
+
+
+
 
 
 
