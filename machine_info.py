@@ -2,7 +2,7 @@ import socket
 import psutil
 
 
-def print_machine_info():
+def get_info():
     #hostn name
     host_name = socket.gethostname()
 
@@ -40,15 +40,23 @@ def print_machine_info():
         return "\n".join(loni)
         
 
+    #returning machine info to the gui instead of printing to terminal
+    return(
+        f"Host name: {host_name}\n\n"
+        f"Primary IP address: {primary_ip_address}\n\n"
+        f"All IP address(es): {' , '.join(all_ips)}\n\n"
+        f"Socket local port: {socket_local_port}\n\n"
+        f"List Of Network Interfaces: \n{get_network_interfaces()}\n"
+    )
 
-
+    # [NOW REMOVED] [OLD TERMINAL BUILT] CHANGED TO SYNCH THE FILE TO THE GUI
     #printing machine info
-    print(f"Host name: {host_name}\n")
-    print(f"Primary IP address: {primary_ip_address}\n")
-    print(f"All IP address(es): {" , ".join(all_ips)}\n")
-    print(f"Socket local port: {socket_local_port}\n")
-    print(f"List Of Network Interfaces: \n{get_network_interfaces()}\n")
+    #print(f"Host name: {host_name}\n")
+    #print(f"Primary IP address: {primary_ip_address}\n")
+    #print(f"All IP address(es): {" , ".join(all_ips)}\n")
+    #print(f"Socket local port: {socket_local_port}\n")
+    #print(f"List Of Network Interfaces: \n{get_network_interfaces()}\n")
 
 
 if __name__ == "__main__":
-    print_machine_info()
+    print(get_info())
