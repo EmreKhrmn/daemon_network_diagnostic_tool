@@ -144,7 +144,7 @@ class DaemonGUI:
 #module D /simple chat
 
     def build_chat_tab(self):
-        ttk.Label(self.tab_chat, text="Simple Chat", font=("Arial", 14, "bold")).pack(pady=10)
+        ttk.Label(self.tab_chat, text="Simple Chat", font=("Arial", 14, "bold")).pack(pady=20)
         
         #connection controls
         conn_frame = ttk.Frame(self.tab_chat)
@@ -160,58 +160,82 @@ class DaemonGUI:
         self.chat_port.insert(0, "8888")
         self.chat_port.grid(row=0, column=3, padx=5)
 
-        ttk.Button(conn_frame, text="Host Chat (Server)", command=self.host_chat).grid(row=0, column=4, padx=5)
-        ttk.Button(conn_frame, text="Join Chat (Client)", command=self.join_chat).grid(row=0, column=5, padx=5)
+        ttk.Button(conn_frame, text="Host Chat (Server)", command=self.host_chat).grid(row=1, column=0,columnspan=2, pady=20)
+        ttk.Button(conn_frame, text="Join Chat (Client)", command=self.join_chat).grid(row=1, column=2,columnspan=2, pady=20)
 
-        #chat log box
-        self.chat_log = scrolledtext.ScrolledText(self.tab_chat, width=80, height=15, state='disabled')
-        self.chat_log.pack(pady=10)
+    def open_chat_window(self, title):
+        #spawns a brand new popup window for the chat sessions
+        chat_win = tk.Toplevel(self.root)
+        chat_win.title(title)
+        chat_win.geometry("500x400")
 
-        #message entry and send
-        msg_frame = ttk.Frame(self.tab_chat)
-        msg_frame.pack(fill='x', padx=20)
-        self.chat_entry = ttk.Entry(msg_frame)
-        self.chat_entry.pack(side='left', fill='x', expand=True, padx=(0, 10))
-        ttk.Button(msg_frame, text="Send", command=self.send_chat_msg).pack(side='right')
+        #builds the log and entry box inside the new window
+        chat_log = scrolledtext.ScrolledText(chat_win, state='disabled')
+        chat_log.pack(padx=10, pady=10, fill='both', expand=True)
 
-        self.chat_socket = None #hold
+        msg_frame = ttk.Frame(chat_win)
+        msg_frame.pack(fill='x', padx=10, pady=10)
+        
+        chat_entry = ttk.Entry(msg_frame)
+        chat_entry.pack(side='left', fill='x', expand=True, padx=(0, 10))
+        
+        #creates a unique send function for this specific window
+        def send_msg():
+            msg = chat_entry.get()
+            #checks if this window has successfully connected to a socket yet
+            if msg and hasattr(chat_win, 'socket') and chat_win.socket:
+                log_msg(f"Me: {msg}")
+                simple_chat.send_message_net(chat_win.socket, msg)
+                chat_entry.delete(0, tk.END)
 
-    def log_chat(self, message):
-        self.chat_log.config(state='normal')
-        self.chat_log.insert(tk.END, message + "\n")
-        self.chat_log.yview(tk.END)
-        self.chat_log.config(state='disabled')
+        ttk.Button(msg_frame, text="Send", command=send_msg).pack(side='right')
+
+        #creates a unique logger for this specific window
+        def log_msg(message):
+            chat_log.config(state='normal')
+            chat_log.insert(tk.END, message + "\n")
+            chat_log.yview(tk.END)
+            chat_log.config(state='disabled')
+
+        #returns the window and its logger so the network threads can use them
+        return chat_win, log_msg
 
     def host_chat(self):
         port = int(self.chat_port.get())
-        self.log_chat(f"Starting Chat Server on port {port}...")
-        threading.Thread(target=self._run_chat_server, args=(port,), daemon=True).start()
+        #opens the pop-up
+        chat_win, log_msg = self.open_chat_window(f"Chat Server (Port {port})")
+        log_msg(f"Starting Server on port {port}. Waiting for partner...")
+        
+        #runs network logic in background
+        threading.Thread(target=self._run_chat_server, args=(port, chat_win, log_msg), daemon=True).start()
 
     def join_chat(self):
         ip = self.chat_ip.get()
         port = int(self.chat_port.get())
-        self.log_chat(f"Connecting to {ip}:{port}...")
-        threading.Thread(target=self._run_chat_client, args=(ip, port), daemon=True).start()
+        #opens the pop-up
+        chat_win, log_msg = self.open_chat_window(f"Chat Client connected to {ip}:{port}")
+        log_msg(f"Connecting to {ip}:{port}...")
+        
+        #runs network logic in background
+        threading.Thread(target=self._run_chat_client, args=(ip, port, chat_win, log_msg), daemon=True).start()
 
-    def _run_chat_server(self, port):
-        #to simple chat module file
-        self.chat_socket = simple_chat.start_server_socket(port)
-        self.log_chat("Client connected!")
-        simple_chat.receive_messages_gui(self.chat_socket, self.log_chat)
+    def _run_chat_server(self, port, chat_win, log_msg):
+        try:
+            #binds the active socket directly to this specific pop-up window
+            chat_win.socket = simple_chat.start_server_socket(port)
+            log_msg("Client connected!")
+            simple_chat.receive_messages_gui(chat_win.socket, log_msg)
+        except Exception as e:
+            log_msg(f"Server Error: {e}")
 
-    def _run_chat_client(self, ip, port):
-        #to simple chat module file
-        self.chat_socket = simple_chat.start_client_socket(ip, port)
-        self.log_chat("Connected to Server!")
-        simple_chat.receive_messages_gui(self.chat_socket, self.log_chat)
-
-    def send_chat_msg(self):
-        msg = self.chat_entry.get()
-        if msg and self.chat_socket:
-            self.log_chat(f"Me: {msg}")
-            #send
-            simple_chat.send_message_net(self.chat_socket, msg)
-            self.chat_entry.delete(0, tk.END)
+    def _run_chat_client(self, ip, port, chat_win, log_msg):
+        try:
+            #binds the active socket directly to this specific pop-up window
+            chat_win.socket = simple_chat.start_client_socket(ip, port)
+            log_msg("Connected to Server!")
+            simple_chat.receive_messages_gui(chat_win.socket, log_msg)
+        except Exception as e:
+            log_msg(f"Client Error: {e}")
 
 #------------------------------------------------------------------------------------------------------------------------
 # module E / Settings and Errors
