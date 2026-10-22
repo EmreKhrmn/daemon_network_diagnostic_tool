@@ -2,10 +2,10 @@ import socket
 
 
 #tcp server
-def run_server():
-    host_name = socket.gethostname()
+def run_server(port):
+    #[OLD]host_name = socket.gethostname()
+    host_name = "0.0.0.0"
 
-    port = int(input("Enter port to listen on: "))
 
     #tcp
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -16,16 +16,22 @@ def run_server():
     #binding
     sock.bind((host_name,port))
 
-    print(f"Starting Echo Server on {host_name}:{port}")
+    server_log = []
+    server_log.append(f"Starting Echo Server on {host_name}:{port}")
+    
+    #print(f"Starting Echo Server on {host_name}:{port}")
   
 
     #------------------------
     #send data
     sock.listen(1)
-    print("Waiting for a client to connect...")
+
+    server_log.append("Waiting for a client to connect...")
+    #print("Waiting for a client to connect...")
 
     conn, addr = sock.accept()
-    print(f"Connected by: {addr}")
+    server_log.append(f"Connected by: {addr}")
+    #print(f"Connected by: {addr}")
 
     with conn:
         while True:
@@ -34,9 +40,13 @@ def run_server():
             if not data:
                 break
 
-            print(f"Received from client. {data.decode('utf-8')}")
+            server_log.append(f"Received from client. {data.decode('utf-8')}")
+            #print(f"Received from client. {data.decode('utf-8')}")
 
             conn.sendall(data)
+
+    server_log.append("Server connection closed.")
+    return "\n".join(server_log)
 
     
 
@@ -70,23 +80,27 @@ def run_server():
 
 
 #tcp client
-def run_client():
-    host_name = input("Enter server IP or hostname to connect to: ")
+def run_client(host_name, port, message):
+    client_log = []
     
-    port = int(input("Enter the server's port: "))
+    #[OLD]host_name = input("Enter server IP or hostname to connect to: ")
+    
+    #[OLD]port = int(input("Enter the server's port: "))
 
     #tcp
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    print(f"Connecting to {host_name}:{port}...")
+    #[OLD]print(f"Connecting to {host_name}:{port}...")
+    client_log.append(f"Connecting to {host_name}:{port}...")
 
     #connect(?)
     sock.connect((host_name,port))
 
 
     try:
-        message = input("Please enter your message")
-        print(f'Sending "{message}"')
+        #[OLD]message = input("Please enter your message")
+        #[OLD]print(f'Sending "{message}"')
+        client_log.append(f'Sending "{message}"')
 
         sock.sendall(message.encode('utf-8'))
 
@@ -99,23 +113,27 @@ def run_client():
             data = sock.recv(16)
             amount_received += len(data)
             full_response += data.decode('utf-8')
-            print(f"Received {data}")
+            #[OLD]print(f"Received {data}")
+            client_log.append(f"Received {data}")
 
         if message == full_response:
-            print(f'Successfully received message: "{full_response}"')
+            #[OLD]print(f'Successfully received message: "{full_response}"')
+            client_log.append(f'Successfully received message: "{full_response}"')        
         else:    
-            print(f'Error: Data mismatch: Received: "{full_response}"')
+            #[OLD]print(f'Error: Data mismatch: Received: "{full_response}"')
+            client_log.append(f'Error: Data mismatch: Received: "{full_response}"')
     except socket.error as socket_error:
-        print(f'Socket error: "{str(socket_error)}"')
-
+        #[OLD]print(f'Socket error: "{str(socket_error)}"')
+        client_log.append(f'Socket error: "{str(socket_error)}"')
     except Exception as exc:
-        print(f'Other exception: "{str(exc)}"')
+        #[OLD]print(f'Other exception: "{str(exc)}"')
+        client_log.append(f'Other exception: "{str(exc)}"')
 
     finally:
-        print("Closing connection to the server")
-
+        #[OLD]print("Closing connection to the server")
+        client_log.append("Closing connection to the server")
         sock.close()
-
+    return "\n".join(client_log)
 
 
 
@@ -147,9 +165,15 @@ def echo_test_menu():
     choice = input("Select mode (1 or 2): ")
 
     if choice == '1':
-        run_server()
+        #terminal fallback, readded inputs here so terminal test still works
+        port = int(input("Enter port to listen on: "))
+        print(run_server(port))
     elif choice == '2':
-        run_client()
+        #tterminal fallback, readded inputs here so terminal test still workss
+        host_name = input("Enter server IP or hostname to connect to: ")
+        port = int(input("Enter the server's port: "))
+        message = input("Please enter your message: ")
+        print(run_client(host_name, port, message))
     else:
         print("Invalid choice.")
 

@@ -12,14 +12,20 @@ def get_sntp_time():
     local_time = ctime(time())
 
     #result
-    print("-"*30)
-    print(f"Network Time: {network_time}")
-    print(f"Local Time:   {local_time}")
-    print(f"-"*30)
+    #[OLD]print("-"*30)
+    #[OLD]print(f"Network Time: {network_time}")
+    #[OLD]print(f"Local Time:   {local_time}")
+    #[OLD]print(f"-"*30)
 
+    return (
+        f"{'-'*30}\n"
+        f"Network Time: {network_time}\n"
+        f"Local Time:   {local_time}\n"
+        f"{'-'*30}"
+    )
 
 
 
 #---------------------------------------------------
 if __name__ == "__main__":
-    get_sntp_time()
+    print(get_sntp_time())

@@ -1,9 +1,11 @@
 import socket
 import threading
 
-def start_server():
-    host = socket.gethostname()
-    port = int(input("Enter port to listen on: "))
+def start_server_socket(port):
+
+    host = "0.0.0.0"
+    #host = socket.gethostname()
+    #[REMOVED]port = int(input("Enter port to listen on: "))
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -15,12 +17,12 @@ def start_server():
     conn, addr = sock.accept()
     print(f"Connected to {addr}")
 
-    return conn,sock
+    return conn
 
 
-def start_client():
-    host = input("Enter server IP or hostname: ")
-    port = int(input("Enter server port:"))
+def start_client_socket(host, port):
+    #[REMOVED]host = input("Enter server IP or hostname: ")
+    #[REMOVED]port = int(input("Enter server port:"))
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print(f"Connecting to {host}:{port}")
@@ -30,37 +32,41 @@ def start_client():
     return sock
 
 
-def receive_messages(sock, log_filename="chat_log.txt"):
+def receive_messages_gui(sock, ui_callback, log_filename="chat_log.txt"):
 
     with open(log_filename, "a", encoding="utf-8") as log_file:
         while True:
             try:
                 data = sock.recv(2048)
                 if not data:
-                    print("[Partner Disconnected]")
+                    #[REMOVED]print("[Partner Disconnected]")
+                    ui_callback("[Partner Disconnected]")
                     break
 
                 message = data.decode('utf-8')
                 formatted_msg = (f"Partner: {message}")
 
-                print(f"\n{formatted_msg}")
+                ui_callback(formatted_msg)
+                #[REMOVED]print(f"\n{formatted_msg}")
                 log_file.write(formatted_msg + "\n")
                 log_file.flush()
 
             except Exception as e:
-                print(f"\n[Connection closed or error: {e}]")
+                #[REMOVED]print(f"\n[Connection closed or error: {e}]")
+                ui_callback(f"[Connection closed or error: {e}]")
                 break
 
-def send_messages(sock, log_filename="chat_log.txt"):
+
+
+
+def send_message_net(sock, message, log_filename="chat_log.txt"):
 
     with open(log_filename, "a", encoding="utf-8") as log_file:
-        while True:
-            try:
-                message = input("")
-                if message.lower() == 'exit':
-                    print("Closing connection...")
-                    sock.close()
-                    break
+        try:
+            if message.lower() == 'exit':
+                print("Closing connection...")
+                sock.close()
+                return
 
                 #bytes over network
                 sock.sendall(message.encode('utf-8'))
@@ -70,8 +76,8 @@ def send_messages(sock, log_filename="chat_log.txt"):
                 log_file.write(formatted_msg + "\n")
                 log_file.flush()
 
-            except Exception as e:
-                break
+        except Exception as e:
+            pass
 
 
 
@@ -86,30 +92,50 @@ def chat_menu():
     choice = input("Select mode (1 or 2 ): ")
 
     if choice == '1':
-        conn, server_sock = start_server()
+        #conn, server_sock = start_server()
+        port = int(input("Enter port to listen on: "))
+        conn = start_server_socket(port)
         print("Chat Started. Type your message below. Type 'exit' to quit.")
 
         #receiver
-        recv_thread = threading.Thread(target=receive_messages, args=(conn,))
+        recv_thread = threading.Thread(target=receive_messages_gui, args=(conn, print))
         recv_thread.daemon = True
         recv_thread.start()
 
         #sender
-        send_messages(conn)
+        #[REMOVED]send_messages(conn)
 
         #clean
-        conn.close()
-        server_sock.close()
+        #[REMOVED]conn.close()
+        #[REMOVED]server_sock.close()
+
+        while True:
+            msg = input("")
+            if msg.lower() == 'exit':
+                conn.close()
+                break
+            send_message_net(conn, msg)
+
 
     elif choice == '2':
-        client_sock = start_client()
+        #[REMOVED]client_sock = start_client()
+        host = input("Enter server IP or hostname: ")
+        port = int(input("Enter server port: "))
+        client_sock = start_client_socket(host, port)
+
         print("Chat started. Type your message below. Type 'exit' to quit." )
 
-        recv_thread = threading.Thread(target=receive_messages, args=(client_sock,))
+        recv_thread = threading.Thread(target=receive_messages_gui, args=(client_sock, print))
         recv_thread.daemon = True
         recv_thread.start()
 
-        send_messages(client_sock)
+        #[REMOVED]send_messages(client_sock)
+        while True:
+            msg = input("")
+            if msg.lower() == 'exit':
+                client_sock.close()
+                break
+            send_message_net(client_sock, msg)
     else:
         print("Invalid choice.")
 
