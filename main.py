@@ -193,11 +193,14 @@ class DaemonGUI:
         ttk.Button(msg_frame, text="Send", command=send_msg).pack(side='right')
 
         #creates a unique logger for this specific window
-        def log_msg(message):
+        def log_msg_internal(message):
             chat_log.config(state='normal')
             chat_log.insert(tk.END, message + "\n")
             chat_log.yview(tk.END)
             chat_log.config(state='disabled')
+
+        def log_msg(message):
+            chat_win.after(0, log_msg_internal, message)
 
         #returns the window and its logger so the network threads can use them
         return chat_win, log_msg

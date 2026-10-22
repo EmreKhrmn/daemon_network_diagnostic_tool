@@ -63,23 +63,23 @@ def receive_messages_gui(sock, ui_callback, log_filename="chat_log.txt"):
 
 def send_message_net(sock, message, log_filename="chat_log.txt"):
 
-    with open(log_filename, "a", encoding="utf-8") as log_file:
-        try:
-            if message.lower() == 'exit':
-                print("Closing connection...")
-                sock.close()
-                return
+    #[REMOVED][FIX]with open(log_filename, "a", encoding="utf-8") as log_file:
+    try:
+        if message.lower() == 'exit':
+            print("Closing connection...")
+            sock.close()
+            return
 
-                #bytes over network
-                sock.sendall(message.encode('utf-8'))
+        #bytes over network
+        sock.sendall(message.encode('utf-8'))
 
-                #own msg log save
-                formatted_msg = (f"Me: {message}")
-                log_file.write(formatted_msg + "\n")
-                log_file.flush()
+        #own msg log save
+        formatted_msg = (f"Me: {message}")
+        with open(log_filename, "a", encoding="utf-8") as log_file:
+            log_file.write(formatted_msg+"\n")
 
-        except Exception as e:
-            pass
+    except Exception as e:
+        print(f"Network Send Error: {e}")
 
 
 
