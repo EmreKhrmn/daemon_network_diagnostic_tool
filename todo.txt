@@ -1,1 +1,0 @@
-dont forget to add "pip install pustil" on the final installaion guide
