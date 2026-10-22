@@ -34,7 +34,7 @@ def start_client_socket(host, port):
 
 def receive_messages_gui(sock, ui_callback, log_filename="chat_log.txt"):
 
-    with open(log_filename, "a", encoding="utf-8") as log_file:
+    #[removed][fix]with open(log_filename, "a", encoding="utf-8") as log_file:
         while True:
             try:
                 data = sock.recv(2048)
@@ -48,8 +48,10 @@ def receive_messages_gui(sock, ui_callback, log_filename="chat_log.txt"):
 
                 ui_callback(formatted_msg)
                 #[REMOVED]print(f"\n{formatted_msg}")
-                log_file.write(formatted_msg + "\n")
-                log_file.flush()
+                #[removed][fix]log_file.write(formatted_msg + "\n")
+                #[removed][fix]log_file.flush()
+                with open(log_filename, "a", encoding="utf-8") as log_file:
+                    log_file.write(formatted_msg + "\n")
 
             except Exception as e:
                 #[REMOVED]print(f"\n[Connection closed or error: {e}]")
