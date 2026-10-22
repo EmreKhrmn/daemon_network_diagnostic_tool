@@ -170,11 +170,13 @@ class DaemonGUI:
         chat_win.geometry("500x400")
 
         #builds the log and entry box inside the new window
-        chat_log = scrolledtext.ScrolledText(chat_win, state='disabled')
-        chat_log.pack(padx=10, pady=10, fill='both', expand=True)
-
         msg_frame = ttk.Frame(chat_win)
-        msg_frame.pack(fill='x', padx=10, pady=10)
+        msg_frame.pack(side='bottom', fill='x', padx=10, pady=10)
+
+        chat_log = scrolledtext.ScrolledText(chat_win, state='disabled')
+        chat_log.pack(side='top', padx=10, pady=10, fill='both', expand=True)
+
+
         
         chat_entry = ttk.Entry(msg_frame)
         chat_entry.pack(side='left', fill='x', expand=True, padx=(0, 10))
