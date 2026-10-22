@@ -47,6 +47,10 @@
                 {
                     "condition": "name === 'sntp_time.py'",
                     "priority": -200
+                },
+                {
+                    "condition": "name === 'settings_errors.py'",
+                    "priority": -400
                 }
             ]
         },
