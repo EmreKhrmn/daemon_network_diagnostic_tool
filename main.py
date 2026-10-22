@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk, scrolledtext, messagebox
 import threading
 import sys
+from datetime import datetime
 
 #modules
 import machine_info
@@ -169,6 +170,9 @@ class DaemonGUI:
         chat_win.title(title)
         chat_win.geometry("500x400")
 
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        chat_win.log_filename = f"chat_log_{timestamp}.txt"
+
         #builds the log and entry box inside the new window
         msg_frame = ttk.Frame(chat_win)
         msg_frame.pack(side='bottom', fill='x', padx=10, pady=10)
@@ -187,7 +191,7 @@ class DaemonGUI:
             #checks if this window has successfully connected to a socket yet
             if msg and hasattr(chat_win, 'socket') and chat_win.socket:
                 log_msg(f"Me: {msg}")
-                simple_chat.send_message_net(chat_win.socket, msg)
+                simple_chat.send_message_net(chat_win.socket, msg, chat_win.log_filename)
                 chat_entry.delete(0, tk.END)
 
         ttk.Button(msg_frame, text="Send", command=send_msg).pack(side='right')
@@ -229,7 +233,7 @@ class DaemonGUI:
             #binds the active socket directly to this specific pop-up window
             chat_win.socket = simple_chat.start_server_socket(port)
             log_msg("Client connected!")
-            simple_chat.receive_messages_gui(chat_win.socket, log_msg)
+            simple_chat.receive_messages_gui(chat_win.socket, log_msg, chat_win.log_filename)
         except Exception as e:
             log_msg(f"Server Error: {e}")
 
@@ -238,7 +242,7 @@ class DaemonGUI:
             #binds the active socket directly to this specific pop-up window
             chat_win.socket = simple_chat.start_client_socket(ip, port)
             log_msg("Connected to Server!")
-            simple_chat.receive_messages_gui(chat_win.socket, log_msg)
+            simple_chat.receive_messages_gui(chat_win.socket, log_msg, chat_win.log_filename)
         except Exception as e:
             log_msg(f"Client Error: {e}")
 

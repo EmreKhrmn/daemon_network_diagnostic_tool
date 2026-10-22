@@ -9,3 +9,9 @@ Me: well see you later then
 Partner: well see you later then
 Me: see ya
 Partner: see ya
+Me: hello! #1
+Partner: hello! #1
+Me: Hi! #2
+Partner: Hi! #2
+Me: How are you doing! #3
+Partner: How are you doing! #3
