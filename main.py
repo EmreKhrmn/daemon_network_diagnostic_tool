@@ -9,6 +9,7 @@ import machine_info
 import echo_test
 import sntp_time
 import simple_chat
+import settings_errors
 
 class DaemonGUI:
 #------------------------------------------------------------------------------------------------------------------------
@@ -242,11 +243,30 @@ class DaemonGUI:
 
         ttk.Button(self.tab_settings, text="Apply Settings & Run Error Management Test", command=self.run_settings_test).pack()
 
+    def run_settings_test(self):
+        self.settings_output.delete(1.0, tk.END)
+        try:
+            #grab the numbers from the gui text boxes
+            s_buf = int(self.entry_send.get())
+            r_buf = int(self.entry_recv.get())
+            t_out = float(self.entry_timeout.get())
+            
+            #call 
+            result = settings_errors.run_test(s_buf, r_buf, t_out)
+            
+            #pğrinting the returned text to the gui
+            self.settings_output.insert(tk.END, result)
+            
+        except ValueError:
+            self.settings_output.insert(tk.END, "Error: Please enter valid numbers in the boxes.\n")
+        except Exception as e:
+            self.settings_output.insert(tk.END, f"Module Error: {e}\n")
+
   
 
 
 #------------------------------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
     root = tk.Tk()
-    app = DaemonGUI(root)
+    app = DaemonGUI(root) 
     root.mainloop()
