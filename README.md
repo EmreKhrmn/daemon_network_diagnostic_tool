@@ -1,7 +1,6 @@
-# network_diagnostic_tool
+# Daemon Network Diagnostic and Tool Package
 Daemon is a comprehensive network diagnostic tool
 
-# Daemon Network Diagnostic and Tool Package
 
 **Author:** Emre Kahraman  
 **Student ID:** 2022555035 
