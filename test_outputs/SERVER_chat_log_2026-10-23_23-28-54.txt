@@ -1,0 +1,8 @@
+Partner: Hello World?
+Me: Hello World it is!!
+Partner: It looks like Daemon works just as intented!
+Partner: it's  "intended" and thank god that it works!
+Me: What else should we say to test the chat module?
+Partner: IDK This much seems more than enough
+Me: Agree, lets wrap this up , see ya
+Partner: goodbye!
