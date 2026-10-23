@@ -16,6 +16,7 @@ Daemon is a comprehensive network diagnostic tool
 3. [Module Breakdown](#module-breakdown)
 4. [Prerequisites & Installation](#prerequisites--installation)
 5. [Execution & Usage Guide](#execution--usage-guide)
+6. [Test Outputs](#test-outputs)
 
 ---
 
@@ -126,5 +127,30 @@ The main dashboard window will open, displaying five distinct tabs corresponding
   2. Set the Timeout to `0.5` (for a standard timeout) or `0.0` (to forcibly demonstrate Non-Blocking Mode).
   3. Click **"Apply Settings & Run Error Management Test"**.
 * **Expected Output:** The system will apply the settings, log the confirmation, and intentionally attempt a connection to `192.0.2.1` (an unreachable IP). A successfully caught network exception (e.g., `[Caught Error] Connection timed out`) will be printed, proving the error management blocks function correctly.
+
+---
+
+## Test Outputs
+
+Below are the screenshots demonstrating the successful execution of the main interface and each individual backend module. 
+
+### Main Interface (`main.py`)
+![Main GUI Dashboard](test_outputs/Main_Dashboard.png)
+
+### Module A: Machine Information (`machine_info.py`)
+![Module A Output](test_outputs/Module_A_Machine_Info.png)
+
+### Module B: Echo Test (`echo_test.py`)
+![Module B Output](test_outputs/Module_B_Echo_Test.png)
+
+### Module C: SNTP Time Synchronization (`sntp_time.py`)
+![Module C Output](test_outputs/Module_C_SNTP_Time.png)
+
+### Module D: Simple Chat (`simple_chat.py`)
+![Module D Output](test_outputs/Module_D_Simple_Chat.png)
+*(Note: Automated chat logs (`.txt`) are also included in the `test_outputs` folder.)*
+
+### Module E: Settings & Errors (`settings_errors.py`)
+![Module E Output](test_outputs/Module_E_Settings_Errors.png)
 
 ---
